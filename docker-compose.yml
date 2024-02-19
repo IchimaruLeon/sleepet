@@ -11,13 +11,17 @@ services:
       - '3000:3000'
     depends_on:
       - mongo
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: pnpm run start:dev auth
+    env_file:
+        - ./apps/auth/.env
+    ports:
+      - '3001:3001'
+    depends_on:
+      - mongo
   mongo:
-    # container_name: sleepetdb
     image: mongo:latest
-    # command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
-    # healthcheck:
-    #   test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27018'}]}) }" | mongosh --port 27017 --quiet
-    # ports:
-    #   - '27018:27017'
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
