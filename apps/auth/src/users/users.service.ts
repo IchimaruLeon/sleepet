@@ -1,14 +1,17 @@
 import {
     Injectable,
+    Logger,
     UnauthorizedException,
     UnprocessableEntityException,
   } from '@nestjs/common';
   import { CreateUserDto } from './dto/create-user.dto';
   import { UsersRepository } from './users.repository';
   import * as bcrypt from 'bcryptjs';
+import { GetUserDto } from './dto/get-user.dto';
   
   @Injectable()
   export class UsersService {
+    protected readonly logger: Logger;
     constructor(private readonly usersRepository: UsersRepository) {}
   
     async create(createUserDto: CreateUserDto) {
@@ -35,5 +38,10 @@ import {
         return;
       }
       throw new UnprocessableEntityException('Email already exists.');
+    }
+
+    async getUser(getUserDto: GetUserDto) {
+      console.log(`validate userId: ${getUserDto._id}`);
+      return this.usersRepository.findOne({ _id: getUserDto._id });
     }
   }
